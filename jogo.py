@@ -3,7 +3,7 @@
 # Inimigo: Adversário do usuário
 
 class Personagem:
-    def __init__(self, nome, vida, nivel) -> None:
+    def __init__(self, nome, vida, nivel):
         self.__nome = nome
         self.__vida = vida
         self.__nivel = nivel
@@ -22,7 +22,7 @@ class Personagem:
 
 
 class Heroi(Personagem):
-    def __init__(self, nome, vida, nivel, habilidade) -> None:
+    def __init__(self, nome, vida, nivel, habilidade):
         super().__init__(nome, vida, nivel)
         self.__habilidade = habilidade
 
@@ -34,7 +34,7 @@ class Heroi(Personagem):
 
 
 class Inimigo(Personagem):
-    def __init__(self, nome, vida, nivel, tipo) -> None:
+    def __init__(self, nome, vida, nivel, tipo):
         super().__init__(nome, vida, nivel)
         self.__tipo = tipo
 
@@ -42,10 +42,32 @@ class Inimigo(Personagem):
         return self.__tipo
 
     def exibir_detalhes(self):
-        return f"{super().exibir_detalhes()}\nTipo: {self.get_tipo()}"
+        return f"\n{super().exibir_detalhes()}\nTipo: {self.get_tipo()}"
 
 
-heroi = Heroi(nome="Heroi", vida="100", nivel=5, habilidade="Super Força")
-print(heroi.exibir_detalhes())
-inimigo = Inimigo(nome="Morcego", vida="100", nivel=3, tipo="Voador")
-print(inimigo.exibir_detalhes())
+class Jogo:
+    """ Classe orquestradora do jogo """
+
+    def __init__(self) -> None:
+        self.heroi = Heroi(nome="Heroi", vida=100,
+                           nivel=5, habilidade="Super Força")
+        self.inimigo = Inimigo(
+            nome="Morcego", vida=100, nivel=3, tipo="Voador")
+
+    def iniciar_batalha(self):
+        """ Fazer a gestão da batalha em turnos """
+        print("Iniciando batalha!")
+        while self.heroi.get_vida() > 0 and self.inimigo.get_vida() > 0:
+            print("\nDetalhes dos Personagens: ")
+            print(self.heroi.exibir_detalhes())
+            print(self.inimigo.exibir_detalhes())
+
+            input("\nPressione enter para atacar...")
+            escolha = input(
+                "Escolha (1 - Ataque Normal, 2 - Ataque Especial): ")
+
+# Criar instância do jogo e inicar batalha
+
+
+jogo = Jogo()
+jogo.iniciar_batalha()
