@@ -20,6 +20,17 @@ class Personagem:
     def exibir_detalhes(self):
         return f"Nome: {self.get_nome()}\nVida: {self.get_vida()}\nNível: {self.get_nivel()}"
 
+    def receber_ataque(self, dano):
+        self.__vida -= dano
+        if self.__vida <= 0:
+            self.__vida = 0
+
+    def atacar(self, alvo):
+        dano = self.__nivel * 2
+        alvo.receber_ataque(dano)
+        print(f"{self.get_nome()} atacou {
+              alvo.get_nome()} e causou {dano} de dano!")
+
 
 class Heroi(Personagem):
     def __init__(self, nome, vida, nivel, habilidade):
@@ -31,6 +42,12 @@ class Heroi(Personagem):
 
     def exibir_detalhes(self):
         return f"{super().exibir_detalhes()}\nHabilidade: {self.get_habilidade()}"
+
+    def ataque_especial(self, alvo):
+        dano = self.get_nivel() * 4  # Dano com potência maior
+        alvo.receber_ataque(dano)
+        print(f"{self.get_nome()} usou a habilidade especial {
+              self.get_habilidade()} em {alvo.get_nome()} e causou {dano} de dano!")
 
 
 class Inimigo(Personagem):
@@ -52,7 +69,7 @@ class Jogo:
         self.heroi = Heroi(nome="Heroi", vida=100,
                            nivel=5, habilidade="Super Força")
         self.inimigo = Inimigo(
-            nome="Morcego", vida=100, nivel=3, tipo="Voador")
+            nome="Morcego", vida=80, nivel=5, tipo="Voador")
 
     def iniciar_batalha(self):
         """ Fazer a gestão da batalha em turnos """
@@ -66,8 +83,24 @@ class Jogo:
             escolha = input(
                 "Escolha (1 - Ataque Normal, 2 - Ataque Especial): ")
 
-# Criar instância do jogo e inicar batalha
+            if escolha == "1":
+                self.heroi.atacar(self.inimigo)
+            elif escolha == "2":
+                self.heroi.ataque_especial(self.inimigo)
+            else:
+                print("Escolha inválida... Escolha novamente!")
 
+            if self.inimigo.get_vida() > 0:
+                # Inimigo realiza o ataque no héroi.
+                self.inimigo.atacar(self.heroi)
+
+        if self.heroi.get_vida() > 0:
+            print("\nParabéns, você venceu a batalha")
+        else:
+            print("\nVocê foi derrotado :(")
+
+
+# Criar instância do jogo e inicar batalha
 
 jogo = Jogo()
 jogo.iniciar_batalha()
